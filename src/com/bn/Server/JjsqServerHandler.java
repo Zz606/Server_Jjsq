@@ -16,27 +16,27 @@ class myFutureListener implements ChannelFutureListener
 {
 	@Override
 	public void operationComplete(ChannelFuture arg0) throws Exception{
-		System.out.println("·şÎñÆ÷Ïò¿Í»§¶Ë·¢ËÍÍê±Ï");
+		System.out.println("æœåŠ¡å™¨å‘å®¢æˆ·ç«¯å‘é€å®Œæ¯•");
 	}
 }
 public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
 	static myFutureListener mm=new myFutureListener();
 	
-	List<String[]> ls=null;//´æ·ÅÊı¾İ²éÑ¯½á¹û
-	byte[] datapic=null; //·şÎñÆ÷Òª´«¸øPcµÄÍ¼Æ¬
-	public static byte[] Pcimg;//´æ·Åpc´«µ½·şÎñÆ÷µÄ
+	List<String[]> ls=null;//å­˜æ”¾æ•°æ®æŸ¥è¯¢ç»“æœ
+	byte[] datapic=null; //æœåŠ¡å™¨è¦ä¼ ç»™Pcçš„å›¾ç‰‡
+	public static byte[] Pcimg;//å­˜æ”¾pcä¼ åˆ°æœåŠ¡å™¨çš„
 	
-	//Á¬½Ó³É¹¦Ê±
+	//è¿æ¥æˆåŠŸæ—¶
 	@Override
 	public void channelActive(final ChannelHandlerContext ctx){
-		System.out.println("¿Í»§¶ËÁ¬½Ó->"+ctx.channel().remoteAddress());
+		System.out.println("å®¢æˆ·ç«¯è¿æ¥->"+ctx.channel().remoteAddress());
 	}
 	@Override
 	public void channelRead(final ChannelHandlerContext ctx, Object msg)
 	{
 		ByteBuf m=(ByteBuf)msg;
 		String ss=null;
-		String content="";//½ØÈ¡ÏûÏ¢×Ö·û´®ºóµÄÓĞĞ§ĞÅÏ¢
+		String content="";//æˆªå–æ¶ˆæ¯å­—ç¬¦ä¸²åçš„æœ‰æ•ˆä¿¡æ¯
 		String path= content=Constant.allPath+"/";
 		byte datapic[];
 		String[] s;
@@ -54,13 +54,13 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
 			case 0:
 				
 				String msgStr=ConvertUtil.fromBytesToString(realData);
-				if(msgStr.startsWith(Constant.getAdministrator))//»ñÈ¡µÇÂ¼Ãû£¬ÃÜÂë
+				if(msgStr.startsWith(Constant.getAdministrator))//è·å–ç™»å½•åï¼Œå¯†ç 
 				{
 					content=msgStr.substring(20);
 					ss=DBUtil.getAdministrator(content);
 					IOUtil.writeString(ctx, ss, mm);
 					ctx.close();
-				}else if(msgStr.startsWith(Constant.GetManagerByID)){//Í¨¹ı¹ÜÀíÔ±ID»ñÈ¡¹ÜÀíÔ±
+				}else if(msgStr.startsWith(Constant.GetManagerByID)){//é€šè¿‡ç®¡ç†å‘˜IDè·å–ç®¡ç†å‘˜
         			content=msgStr.substring(18);
         			s=StrListChange.StrToArray(content);
         			ss=StrListChange.ListToStr(DBUtil.GetManagerByID(s));
@@ -70,7 +70,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.GetAllManager)){//»ñÈ¡ËùÓĞ¹ÜÀíÔ±
+        		}else if(msgStr.startsWith(Constant.GetAllManager)){//è·å–æ‰€æœ‰ç®¡ç†å‘˜
         		
         			ls=DBUtil.GetAllManager();
         			ss=StrListChange.ListToStr(ls);
@@ -80,17 +80,17 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        	   }else if(msgStr.startsWith(Constant.UpdateManagerByButton)){//¸üĞÂ¹ÜÀíÔ±
+        	   }else if(msgStr.startsWith(Constant.UpdateManagerByButton)){//æ›´æ–°ç®¡ç†å‘˜
         		    content=msgStr.substring(25);
         			s=StrListChange.StrToArray(content);
         			DBUtil.UpdateManagerByButton(s);
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.insertManager)){//Ìí¼Ó¹ÜÀíÔ±
+        		}else if(msgStr.startsWith(Constant.insertManager)){//æ·»åŠ ç®¡ç†å‘˜
         			content=msgStr.substring(17);
         			s=StrListChange.StrToArray(content);
         			DBUtil.insertManager(s);
                     ctx.close();
-        		}else if(msgStr.startsWith(Constant.getdpName)){//µÃµ½ËùÓĞµêÆÌÃû×Ö
+        		}else if(msgStr.startsWith(Constant.getdpName)){//å¾—åˆ°æ‰€æœ‰åº—é“ºåå­—
         			ss=StrListChange.ListToStr(DBUtil.getdpName());
         			IOUtil.writeString(
         					ctx,
@@ -99,7 +99,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					);	
         			ctx.close();
         		}
-        		else if(msgStr.startsWith(Constant.getAlldpXx)){//µÃµ½ËùÓĞµêÆÌĞÅÏ¢
+        		else if(msgStr.startsWith(Constant.getAlldpXx)){//å¾—åˆ°æ‰€æœ‰åº—é“ºä¿¡æ¯
         			ss=StrListChange.ListToStr(DBUtil.getAlldpXx());
         			IOUtil.writeString(
         					ctx,
@@ -107,7 +107,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.getdpDetialXx)){//µÃµ½µ¥¸öµêÆÌµÄÏêÏ¸ĞÅÏ¢
+        		}else if(msgStr.startsWith(Constant.getdpDetialXx)){//å¾—åˆ°å•ä¸ªåº—é“ºçš„è¯¦ç»†ä¿¡æ¯
         			content=msgStr.substring(17);
         			ss=StrListChange.ListToStr(DBUtil.getdpDetialXx(content));
         			IOUtil.writeString(
@@ -116,7 +116,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.getSectiondpNameXx)){//Í¨¹ıµêÆÌÃûµÃµ½ĞÅÏ¢
+        		}else if(msgStr.startsWith(Constant.getSectiondpNameXx)){//é€šè¿‡åº—é“ºåå¾—åˆ°ä¿¡æ¯
         		    content=msgStr.substring(22);
         			ss=StrListChange.ListToStr(DBUtil.getSectiondpNameXx(content));
         			IOUtil.writeString(
@@ -157,7 +157,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         			IOUtil.writeString(ctx, ss, mm);
         			ctx.close();
 					
-				}else if(msgStr.startsWith(Constant.getSPName)){//µÃµ½ËùÓĞÉÌÆ·Ãû×Ö
+				}else if(msgStr.startsWith(Constant.getSPName)){//å¾—åˆ°æ‰€æœ‰å•†å“åå­—
         			ss=StrListChange.ListToStr(DBUtil.getSPName());
         			IOUtil.writeString(
         					ctx,
@@ -165,7 +165,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.getALLSP)){//»ñÈ¡ËùÓĞÉÌÆ·µÄ²¿·ÖĞÅÏ¢
+        		}else if(msgStr.startsWith(Constant.getALLSP)){//è·å–æ‰€æœ‰å•†å“çš„éƒ¨åˆ†ä¿¡æ¯
         			ss=StrListChange.ListToStr(DBUtil.getALLSP());
         			IOUtil.writeString(
         					ctx,
@@ -173,7 +173,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.getSectionspXx)){////Í¨¹ı±êÖ¾Î»»ñÈ¡ÉÌÆ·²¿·ÖĞÅÏ¢
+        		}else if(msgStr.startsWith(Constant.getSectionspXx)){////é€šè¿‡æ ‡å¿—ä½è·å–å•†å“éƒ¨åˆ†ä¿¡æ¯
         		    content=msgStr.substring(18);
         			ss=StrListChange.ListToStr(DBUtil.getSectionspXx(content));
         			IOUtil.writeString(
@@ -182,7 +182,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.getSectionspNameXx)){//Í¨¹ıÃû³Æ»ñÈ¡²¿·ÖĞÅÏ¢
+        		}else if(msgStr.startsWith(Constant.getSectionspNameXx)){//é€šè¿‡åç§°è·å–éƒ¨åˆ†ä¿¡æ¯
         		    content=msgStr.substring(22);
         			ss=StrListChange.ListToStr(DBUtil.getSectionspNameXx(content));
         			IOUtil.writeString(
@@ -191,7 +191,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.getSectionspNameXxs)){//Í¨¹ıÄ£ºıÃû³Æ»ñÈ¡²¿·ÖĞÅÏ¢
+        		}else if(msgStr.startsWith(Constant.getSectionspNameXxs)){//é€šè¿‡æ¨¡ç³Šåç§°è·å–éƒ¨åˆ†ä¿¡æ¯
         		    content=msgStr.substring(23);
         			ss=StrListChange.ListToStr(DBUtil.getSectionspNameXxs(content));
         			IOUtil.writeString(
@@ -201,7 +201,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					);	
         			ctx.close();
         		}
-        		else if(msgStr.startsWith(Constant.getspDetail)){//Í¨¹ıÄ£ºıÃû³Æ»ñÈ¡²¿·ÖĞÅÏ¢
+        		else if(msgStr.startsWith(Constant.getspDetail)){//é€šè¿‡æ¨¡ç³Šåç§°è·å–éƒ¨åˆ†ä¿¡æ¯
         		    content=msgStr.substring(15);
         			ss=StrListChange.ListToStr(DBUtil.getspDetail(content));
         			IOUtil.writeString(
@@ -215,7 +215,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
    				datapic=ImageUtil.getImage(path+content);
        			IOUtil.writeByte(ctx, datapic, mm);
 //       			ctx.close();
-        		}else if(msgStr.startsWith(Constant.updatespFlag)){//¸üĞÂÉÌÆ·±êÖ¾Î»
+        		}else if(msgStr.startsWith(Constant.updatespFlag)){//æ›´æ–°å•†å“æ ‡å¿—ä½
         			content=msgStr.substring(16);
         			s=StrListChange.StrToArray(content);
         			DBUtil.updatespFlag(s);
@@ -446,7 +446,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.getGSName)){//µÃµ½ËùÓĞ¹«Ë¾Ãû×Ö
+        		}else if(msgStr.startsWith(Constant.getGSName)){//å¾—åˆ°æ‰€æœ‰å…¬å¸åå­—
         			ss=StrListChange.ListToStr(DBUtil.getGSName());
         			IOUtil.writeString(
         					ctx,
@@ -454,7 +454,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.getALLGS)){//»ñÈ¡ËùÓĞ¹«Ë¾µÄ²¿·ÖĞÅÏ¢
+        		}else if(msgStr.startsWith(Constant.getALLGS)){//è·å–æ‰€æœ‰å…¬å¸çš„éƒ¨åˆ†ä¿¡æ¯
         			ss=StrListChange.ListToStr(DBUtil.getALLGS());
         			IOUtil.writeString(
         					ctx,
@@ -462,7 +462,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.getSectiongsXx)){////Í¨¹ı±êÖ¾Î»»ñÈ¡¹«Ë¾²¿·ÖĞÅÏ¢
+        		}else if(msgStr.startsWith(Constant.getSectiongsXx)){////é€šè¿‡æ ‡å¿—ä½è·å–å…¬å¸éƒ¨åˆ†ä¿¡æ¯
         		    content=msgStr.substring(18);
         			ss=StrListChange.ListToStr(DBUtil.getSectiongsXx(content));
         			IOUtil.writeString(
@@ -471,7 +471,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.getSectiongsNameXx)){//Í¨¹ıÃû³Æ»ñÈ¡²¿·ÖĞÅÏ¢
+        		}else if(msgStr.startsWith(Constant.getSectiongsNameXx)){//é€šè¿‡åç§°è·å–éƒ¨åˆ†ä¿¡æ¯
         		    content=msgStr.substring(22);
         			ss=StrListChange.ListToStr(DBUtil.getSectiongsNameXx(content));
         			IOUtil.writeString(
@@ -480,7 +480,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.getSectiongsNameXxs)){//Í¨¹ıÄ£ºıÃû³Æ»ñÈ¡²¿·ÖĞÅÏ¢
+        		}else if(msgStr.startsWith(Constant.getSectiongsNameXxs)){//é€šè¿‡æ¨¡ç³Šåç§°è·å–éƒ¨åˆ†ä¿¡æ¯
         		    content=msgStr.substring(23);
         			ss=StrListChange.ListToStr(DBUtil.getSectiongsNameXxs(content));
         			IOUtil.writeString(
@@ -490,7 +490,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					);	
         			ctx.close();
         		}
-        		else if(msgStr.startsWith(Constant.getgsDetail)){//»ñÈ¡¹«Ë¾µÄÏêÏ¸ĞÅÏ¢
+        		else if(msgStr.startsWith(Constant.getgsDetail)){//è·å–å…¬å¸çš„è¯¦ç»†ä¿¡æ¯
         		    content=msgStr.substring(15);
         			ss=StrListChange.ListToStr(DBUtil.getgsDetail(content));
         			IOUtil.writeString(
@@ -499,28 +499,28 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.updategsFlag)){//¸üĞÂ¹«Ë¾±êÖ¾Î»
+        		}else if(msgStr.startsWith(Constant.updategsFlag)){//æ›´æ–°å…¬å¸æ ‡å¿—ä½
         			content=msgStr.substring(16);
         			s=StrListChange.StrToArray(content);
         			DBUtil.updategsFlag(s);
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.updategsXx)){//¸üĞÂ¹«Ë¾±êÖ¾Î»
+        		}else if(msgStr.startsWith(Constant.updategsXx)){//æ›´æ–°å…¬å¸æ ‡å¿—ä½
         			content=msgStr.substring(14);
         			s=StrListChange.StrToArray(content);
         			DBUtil.updategsXx(s);
         			ctx.close();
-        		}else if (msgStr.startsWith(Constant.GetMaxgsId)) {//µÃµ½×î´óµÄ¹«Ë¾ID
+        		}else if (msgStr.startsWith(Constant.GetMaxgsId)) {//å¾—åˆ°æœ€å¤§çš„å…¬å¸ID
         			ss=DBUtil.GetMaxgsId();
         			IOUtil.writeString(ctx, ss, mm);
         			ctx.close();
 					
-				}else if (msgStr.startsWith(Constant.insertgsXx)) {//Ìí¼Ó¹«Ë¾ĞÅÏ¢
+				}else if (msgStr.startsWith(Constant.insertgsXx)) {//æ·»åŠ å…¬å¸ä¿¡æ¯
 					content=msgStr.substring(14);
 					s=StrListChange.StrToArray(content);
 					DBUtil.insertgsXx(s);
 					ctx.close();
 				}
-			else if(msgStr.startsWith(Constant.getCaseTitle)){//µÃµ½ËùÓĞ°¸ÀıÃû×Ö
+			else if(msgStr.startsWith(Constant.getCaseTitle)){//å¾—åˆ°æ‰€æœ‰æ¡ˆä¾‹åå­—
         			ss=StrListChange.ListToStr(DBUtil.getCaseTtile());
         			IOUtil.writeString(
         					ctx,
@@ -528,7 +528,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.getALLCase)){//»ñÈ¡ËùÓĞ°¸ÀıµÄ²¿·ÖĞÅÏ¢
+        		}else if(msgStr.startsWith(Constant.getALLCase)){//è·å–æ‰€æœ‰æ¡ˆä¾‹çš„éƒ¨åˆ†ä¿¡æ¯
         			ss=StrListChange.ListToStr(DBUtil.getALLCase());
         			IOUtil.writeString(
         					ctx,
@@ -536,7 +536,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.getSectionCaseXx)){////Í¨¹ı±êÖ¾Î»»ñÈ¡°¸Àı²¿·ÖĞÅÏ¢
+        		}else if(msgStr.startsWith(Constant.getSectionCaseXx)){////é€šè¿‡æ ‡å¿—ä½è·å–æ¡ˆä¾‹éƒ¨åˆ†ä¿¡æ¯
         		    content=msgStr.substring(20);
         			ss=StrListChange.ListToStr(DBUtil.getSectionCaseXx(content));
         			IOUtil.writeString(
@@ -545,7 +545,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.getSectionCaseTitleXx)){//Í¨¹ıÃû³Æ»ñÈ¡²¿·ÖĞÅÏ¢
+        		}else if(msgStr.startsWith(Constant.getSectionCaseTitleXx)){//é€šè¿‡åç§°è·å–éƒ¨åˆ†ä¿¡æ¯
         		    content=msgStr.substring(25);
         			ss=StrListChange.ListToStr(DBUtil.getSectionCaseTitleXx(content));
         			IOUtil.writeString(
@@ -554,7 +554,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.getSectionCaseTitleXxs)){//Í¨¹ıÄ£ºıÃû³Æ»ñÈ¡²¿·ÖĞÅÏ¢
+        		}else if(msgStr.startsWith(Constant.getSectionCaseTitleXxs)){//é€šè¿‡æ¨¡ç³Šåç§°è·å–éƒ¨åˆ†ä¿¡æ¯
         		    content=msgStr.substring(26);
         			ss=StrListChange.ListToStr(DBUtil.getSectionCaseTitleXxs(content));
         			IOUtil.writeString(
@@ -564,7 +564,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					);	
         			ctx.close();
         		}
-        		else if(msgStr.startsWith(Constant.getCaseDetail)){//»ñÈ¡°¸ÀıÏêÏ¸ĞÅÏ¢
+        		else if(msgStr.startsWith(Constant.getCaseDetail)){//è·å–æ¡ˆä¾‹è¯¦ç»†ä¿¡æ¯
         		    content=msgStr.substring(17);
         			ss=StrListChange.ListToStr(DBUtil.getCaseDetail(content));
         			IOUtil.writeString(
@@ -573,33 +573,33 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.updateCaseFlag)){//¸üĞÂ°¸Àı±êÖ¾Î»
+        		}else if(msgStr.startsWith(Constant.updateCaseFlag)){//æ›´æ–°æ¡ˆä¾‹æ ‡å¿—ä½
         			content=msgStr.substring(18);
         			s=StrListChange.StrToArray(content);
         			DBUtil.updateCaseFlag(s);
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.updateCaseXx)){//¸üĞÂ°¸Àı±êÖ¾Î»
+        		}else if(msgStr.startsWith(Constant.updateCaseXx)){//æ›´æ–°æ¡ˆä¾‹æ ‡å¿—ä½
         			content=msgStr.substring(16);
         			s=StrListChange.StrToArray(content);
         			DBUtil.updateCaseXx(s);
         			ctx.close();
-        		}else if (msgStr.startsWith(Constant.getdesignerNameByID)) {//Í¨¹ıID»ñÈ¡Éè¼ÆÊ¦Ãû
+        		}else if (msgStr.startsWith(Constant.getdesignerNameByID)) {//é€šè¿‡IDè·å–è®¾è®¡å¸ˆå
 					content=msgStr.substring(23);
 					System.out.println(content);
 					ss=DBUtil.getdesignerNameByID(content);
 					IOUtil.writeString(ctx, ss, mm);	
 					ctx.close();
-        		}else if (msgStr.startsWith(Constant.GetMaxCaseId)) {//»ñÈ¡×î´ó°¸ÀıµÄID
+        		}else if (msgStr.startsWith(Constant.GetMaxCaseId)) {//è·å–æœ€å¤§æ¡ˆä¾‹çš„ID
         			ss=DBUtil.GetMaxCaseId();
         			IOUtil.writeString(ctx, ss, mm);
         			ctx.close();
 					
-			}else if (msgStr.startsWith(Constant.insertCaseXx)) {//²åÈë°¸ÀıĞÅÏ¢
+			}else if (msgStr.startsWith(Constant.insertCaseXx)) {//æ’å…¥æ¡ˆä¾‹ä¿¡æ¯
 					content=msgStr.substring(16);
 					s=StrListChange.StrToArray(content);
 					DBUtil.insertCaseXx(s);
 					ctx.close();
-			}else if(msgStr.startsWith(Constant.getDesignerName)){//µÃµ½ËùÓĞµêÆÌÃû×Ö
+			}else if(msgStr.startsWith(Constant.getDesignerName)){//å¾—åˆ°æ‰€æœ‰åº—é“ºåå­—
     			ss=StrListChange.ListToStr(DBUtil.getDesignerName());
     			IOUtil.writeString(
     					ctx,
@@ -612,7 +612,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
 				ss=DBUtil.getDesignerIDByName(content);
 				IOUtil.writeString(ctx, ss, mm);	
 				ctx.close();
-    		}else if(msgStr.startsWith(Constant.getALLDesigner)){//»ñÈ¡ËùÓĞÉÌÆ·µÄ²¿·ÖĞÅÏ¢
+    		}else if(msgStr.startsWith(Constant.getALLDesigner)){//è·å–æ‰€æœ‰å•†å“çš„éƒ¨åˆ†ä¿¡æ¯
     			ss=StrListChange.ListToStr(DBUtil.getALLDesigner());
     			IOUtil.writeString(
     					ctx,
@@ -620,7 +620,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
     					mm
     					);	
     			ctx.close();
-    		}else if(msgStr.startsWith(Constant.getSectionDesignerXxs)){//Í¨¹ıÄ£ºıÃû³Æ»ñÈ¡²¿·ÖĞÅÏ¢
+    		}else if(msgStr.startsWith(Constant.getSectionDesignerXxs)){//é€šè¿‡æ¨¡ç³Šåç§°è·å–éƒ¨åˆ†ä¿¡æ¯
     		    content=msgStr.substring(25);
     			ss=StrListChange.ListToStr(DBUtil.getSectionDesignerXxs(content));
     			IOUtil.writeString(
@@ -644,7 +644,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
     					mm
     					);	
     			ctx.close();
-    		}else if(msgStr.startsWith(Constant.updatedesignerXx)){//¸üĞÂ¹«Ë¾±êÖ¾Î»
+    		}else if(msgStr.startsWith(Constant.updatedesignerXx)){//æ›´æ–°å…¬å¸æ ‡å¿—ä½
     			content=msgStr.substring(20);
     			s=StrListChange.StrToArray(content);
     			DBUtil.updatedesignerXx(s);
@@ -664,19 +664,19 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
 				s=StrListChange.StrToArray(content);
 				DBUtil.insertDesignerXx(s);
 				ctx.close();
-			}else if(msgStr.startsWith(Constant.updateDesignerFlag)){//¸üĞÂ¹«Ë¾±êÖ¾Î»
+			}else if(msgStr.startsWith(Constant.updateDesignerFlag)){//æ›´æ–°å…¬å¸æ ‡å¿—ä½
     			content=msgStr.substring(22);
     			s=StrListChange.StrToArray(content);
     			DBUtil.updateDesignerFlag(s);
     			ctx.close();
-    		}else if(msgStr.startsWith(Constant.getUserPassword)){//»ñÈ¡ÓÃ»§ÃÜÂë
+    		}else if(msgStr.startsWith(Constant.getUserPassword)){//è·å–ç”¨æˆ·å¯†ç 
     			content=msgStr.substring(19);
     			ls=DBUtil.getUserpassword(content);
     			ss=StrListChange.ListToStr(ls);
     			
     			IOUtil.writeString(ctx, ss, mm);
     			ctx.close();
-    		}else if(msgStr.startsWith(Constant.insertUser)){//Â¼ÈëĞÂÓÃ»§
+    		}else if(msgStr.startsWith(Constant.insertUser)){//å½•å…¥æ–°ç”¨æˆ·
     			
     			content =msgStr.substring(14);
     			DBUtil.insertUser(content);
@@ -691,7 +691,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
 					/*else if(msgStr.startsWith(Constant.getUserXx)){
     			content=msgStr.substring(13);
     			ss=StrListChange.ListToStr(DBUtil.getUserXx(content));
-    			IOUtil.writeString(ctx, ss, mm);
+    			
     			ctx.close();
     		}*/
 				
@@ -711,7 +711,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
 	@Override
 	public void exceptionCaught(final ChannelHandlerContext ctx ,Throwable cause)
 	{
-		System.out.println("·şÎñÆ÷Òì³£ÒÑÍË³ö");
+		System.out.println("æœåŠ¡å™¨å¼‚å¸¸å·²é€€å‡º");
 		cause.printStackTrace();
 		ctx.close();
 	}
