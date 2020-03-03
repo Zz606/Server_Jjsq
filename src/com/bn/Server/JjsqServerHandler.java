@@ -691,7 +691,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
 					/*else if(msgStr.startsWith(Constant.getUserXx)){
     			content=msgStr.substring(13);
     			ss=StrListChange.ListToStr(DBUtil.getUserXx(content));
-    			
+    			kjskjkd
     			ctx.close();
     		}*/
 				
