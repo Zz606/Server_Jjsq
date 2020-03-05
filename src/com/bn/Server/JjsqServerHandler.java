@@ -16,27 +16,27 @@ class myFutureListener implements ChannelFutureListener
 {
 	@Override
 	public void operationComplete(ChannelFuture arg0) throws Exception{
-		System.out.println("服务器向客户端发送完毕");
+		System.out.println("鏈嶅姟鍣ㄥ悜瀹㈡埛绔彂閫佸畬姣�");
 	}
 }
 public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
 	static myFutureListener mm=new myFutureListener();
 	
-	List<String[]> ls=null;//存放数据查询结果
-	byte[] datapic=null; //服务器要传给Pc的图片
-	public static byte[] Pcimg;//存放pc传到服务器的
+	List<String[]> ls=null;//瀛樻斁鏁版嵁鏌ヨ缁撴灉
+	byte[] datapic=null; //鏈嶅姟鍣ㄨ浼犵粰Pc鐨勫浘鐗�
+	public static byte[] Pcimg;//瀛樻斁pc浼犲埌鏈嶅姟鍣ㄧ殑
 	
-	//连接成功时
+	//杩炴帴鎴愬姛鏃�
 	@Override
 	public void channelActive(final ChannelHandlerContext ctx){
-		System.out.println("客户端连接->"+ctx.channel().remoteAddress());
+		System.out.println("瀹㈡埛绔繛鎺�->"+ctx.channel().remoteAddress());
 	}
 	@Override
 	public void channelRead(final ChannelHandlerContext ctx, Object msg)
 	{
 		ByteBuf m=(ByteBuf)msg;
 		String ss=null;
-		String content="";//截取消息字符串后的有效信息
+		String content="";//鎴彇娑堟伅瀛楃涓插悗鐨勬湁鏁堜俊鎭�
 		String path= content=Constant.allPath+"/";
 		byte datapic[];
 		String[] s;
@@ -54,13 +54,13 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
 			case 0:
 				
 				String msgStr=ConvertUtil.fromBytesToString(realData);
-				if(msgStr.startsWith(Constant.getAdministrator))//获取登录名，密码
+				if(msgStr.startsWith(Constant.getAdministrator))//鑾峰彇鐧诲綍鍚嶏紝瀵嗙爜
 				{
 					content=msgStr.substring(20);
 					ss=DBUtil.getAdministrator(content);
 					IOUtil.writeString(ctx, ss, mm);
 					ctx.close();
-				}else if(msgStr.startsWith(Constant.GetManagerByID)){//通过管理员ID获取管理员
+				}else if(msgStr.startsWith(Constant.GetManagerByID)){//閫氳繃绠＄悊鍛業D鑾峰彇绠＄悊鍛�
         			content=msgStr.substring(18);
         			s=StrListChange.StrToArray(content);
         			ss=StrListChange.ListToStr(DBUtil.GetManagerByID(s));
@@ -70,7 +70,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.GetAllManager)){//获取所有管理员
+        		}else if(msgStr.startsWith(Constant.GetAllManager)){//鑾峰彇鎵�鏈夌鐞嗗憳
         		
         			ls=DBUtil.GetAllManager();
         			ss=StrListChange.ListToStr(ls);
@@ -80,17 +80,17 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        	   }else if(msgStr.startsWith(Constant.UpdateManagerByButton)){//更新管理员
+        	   }else if(msgStr.startsWith(Constant.UpdateManagerByButton)){//鏇存柊绠＄悊鍛�
         		    content=msgStr.substring(25);
         			s=StrListChange.StrToArray(content);
         			DBUtil.UpdateManagerByButton(s);
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.insertManager)){//添加管理员
+        		}else if(msgStr.startsWith(Constant.insertManager)){//娣诲姞绠＄悊鍛�
         			content=msgStr.substring(17);
         			s=StrListChange.StrToArray(content);
         			DBUtil.insertManager(s);
                     ctx.close();
-        		}else if(msgStr.startsWith(Constant.getdpName)){//得到所有店铺名字
+        		}else if(msgStr.startsWith(Constant.getdpName)){//寰楀埌鎵�鏈夊簵閾哄悕瀛�
         			ss=StrListChange.ListToStr(DBUtil.getdpName());
         			IOUtil.writeString(
         					ctx,
@@ -99,7 +99,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					);	
         			ctx.close();
         		}
-        		else if(msgStr.startsWith(Constant.getAlldpXx)){//得到所有店铺信息
+        		else if(msgStr.startsWith(Constant.getAlldpXx)){//寰楀埌鎵�鏈夊簵閾轰俊鎭�
         			ss=StrListChange.ListToStr(DBUtil.getAlldpXx());
         			IOUtil.writeString(
         					ctx,
@@ -107,7 +107,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.getdpDetialXx)){//得到单个店铺的详细信息
+        		}else if(msgStr.startsWith(Constant.getdpDetialXx)){//寰楀埌鍗曚釜搴楅摵鐨勮缁嗕俊鎭�
         			content=msgStr.substring(17);
         			ss=StrListChange.ListToStr(DBUtil.getdpDetialXx(content));
         			IOUtil.writeString(
@@ -116,7 +116,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.getSectiondpNameXx)){//通过店铺名得到信息
+        		}else if(msgStr.startsWith(Constant.getSectiondpNameXx)){//閫氳繃搴楅摵鍚嶅緱鍒颁俊鎭�
         		    content=msgStr.substring(22);
         			ss=StrListChange.ListToStr(DBUtil.getSectiondpNameXx(content));
         			IOUtil.writeString(
@@ -157,7 +157,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         			IOUtil.writeString(ctx, ss, mm);
         			ctx.close();
 					
-				}else if(msgStr.startsWith(Constant.getSPName)){//得到所有商品名字
+				}else if(msgStr.startsWith(Constant.getSPName)){//寰楀埌鎵�鏈夊晢鍝佸悕瀛�
         			ss=StrListChange.ListToStr(DBUtil.getSPName());
         			IOUtil.writeString(
         					ctx,
@@ -165,7 +165,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.getALLSP)){//获取所有商品的部分信息
+        		}else if(msgStr.startsWith(Constant.getALLSP)){//鑾峰彇鎵�鏈夊晢鍝佺殑閮ㄥ垎淇℃伅
         			ss=StrListChange.ListToStr(DBUtil.getALLSP());
         			IOUtil.writeString(
         					ctx,
@@ -173,7 +173,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.getSectionspXx)){////通过标志位获取商品部分信息
+        		}else if(msgStr.startsWith(Constant.getSectionspXx)){////閫氳繃鏍囧織浣嶈幏鍙栧晢鍝侀儴鍒嗕俊鎭�
         		    content=msgStr.substring(18);
         			ss=StrListChange.ListToStr(DBUtil.getSectionspXx(content));
         			IOUtil.writeString(
@@ -182,7 +182,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.getSectionspNameXx)){//通过名称获取部分信息
+        		}else if(msgStr.startsWith(Constant.getSectionspNameXx)){//閫氳繃鍚嶇О鑾峰彇閮ㄥ垎淇℃伅
         		    content=msgStr.substring(22);
         			ss=StrListChange.ListToStr(DBUtil.getSectionspNameXx(content));
         			IOUtil.writeString(
@@ -191,7 +191,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.getSectionspNameXxs)){//通过模糊名称获取部分信息
+        		}else if(msgStr.startsWith(Constant.getSectionspNameXxs)){//閫氳繃妯＄硦鍚嶇О鑾峰彇閮ㄥ垎淇℃伅
         		    content=msgStr.substring(23);
         			ss=StrListChange.ListToStr(DBUtil.getSectionspNameXxs(content));
         			IOUtil.writeString(
@@ -201,7 +201,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					);	
         			ctx.close();
         		}
-        		else if(msgStr.startsWith(Constant.getspDetail)){//通过模糊名称获取部分信息
+        		else if(msgStr.startsWith(Constant.getspDetail)){//閫氳繃妯＄硦鍚嶇О鑾峰彇閮ㄥ垎淇℃伅
         		    content=msgStr.substring(15);
         			ss=StrListChange.ListToStr(DBUtil.getspDetail(content));
         			IOUtil.writeString(
@@ -215,7 +215,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
    				datapic=ImageUtil.getImage(path+content);
        			IOUtil.writeByte(ctx, datapic, mm);
 //       			ctx.close();
-        		}else if(msgStr.startsWith(Constant.updatespFlag)){//更新商品标志位
+        		}else if(msgStr.startsWith(Constant.updatespFlag)){//鏇存柊鍟嗗搧鏍囧織浣�
         			content=msgStr.substring(16);
         			s=StrListChange.StrToArray(content);
         			DBUtil.updatespFlag(s);
@@ -446,7 +446,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.getGSName)){//得到所有公司名字
+        		}else if(msgStr.startsWith(Constant.getGSName)){//寰楀埌鎵�鏈夊叕鍙稿悕瀛�
         			ss=StrListChange.ListToStr(DBUtil.getGSName());
         			IOUtil.writeString(
         					ctx,
@@ -454,7 +454,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.getALLGS)){//获取所有公司的部分信息
+        		}else if(msgStr.startsWith(Constant.getALLGS)){//鑾峰彇鎵�鏈夊叕鍙哥殑閮ㄥ垎淇℃伅
         			ss=StrListChange.ListToStr(DBUtil.getALLGS());
         			IOUtil.writeString(
         					ctx,
@@ -462,7 +462,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.getSectiongsXx)){////通过标志位获取公司部分信息
+        		}else if(msgStr.startsWith(Constant.getSectiongsXx)){////閫氳繃鏍囧織浣嶈幏鍙栧叕鍙搁儴鍒嗕俊鎭�
         		    content=msgStr.substring(18);
         			ss=StrListChange.ListToStr(DBUtil.getSectiongsXx(content));
         			IOUtil.writeString(
@@ -471,7 +471,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.getSectiongsNameXx)){//通过名称获取部分信息
+        		}else if(msgStr.startsWith(Constant.getSectiongsNameXx)){//閫氳繃鍚嶇О鑾峰彇閮ㄥ垎淇℃伅
         		    content=msgStr.substring(22);
         			ss=StrListChange.ListToStr(DBUtil.getSectiongsNameXx(content));
         			IOUtil.writeString(
@@ -480,7 +480,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.getSectiongsNameXxs)){//通过模糊名称获取部分信息
+        		}else if(msgStr.startsWith(Constant.getSectiongsNameXxs)){//閫氳繃妯＄硦鍚嶇О鑾峰彇閮ㄥ垎淇℃伅
         		    content=msgStr.substring(23);
         			ss=StrListChange.ListToStr(DBUtil.getSectiongsNameXxs(content));
         			IOUtil.writeString(
@@ -490,7 +490,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					);	
         			ctx.close();
         		}
-        		else if(msgStr.startsWith(Constant.getgsDetail)){//获取公司的详细信息
+        		else if(msgStr.startsWith(Constant.getgsDetail)){//鑾峰彇鍏徃鐨勮缁嗕俊鎭�
         		    content=msgStr.substring(15);
         			ss=StrListChange.ListToStr(DBUtil.getgsDetail(content));
         			IOUtil.writeString(
@@ -499,28 +499,28 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.updategsFlag)){//更新公司标志位
+        		}else if(msgStr.startsWith(Constant.updategsFlag)){//鏇存柊鍏徃鏍囧織浣�
         			content=msgStr.substring(16);
         			s=StrListChange.StrToArray(content);
         			DBUtil.updategsFlag(s);
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.updategsXx)){//更新公司标志位
+        		}else if(msgStr.startsWith(Constant.updategsXx)){//鏇存柊鍏徃鏍囧織浣�
         			content=msgStr.substring(14);
         			s=StrListChange.StrToArray(content);
         			DBUtil.updategsXx(s);
         			ctx.close();
-        		}else if (msgStr.startsWith(Constant.GetMaxgsId)) {//得到最大的公司ID
+        		}else if (msgStr.startsWith(Constant.GetMaxgsId)) {//寰楀埌鏈�澶х殑鍏徃ID
         			ss=DBUtil.GetMaxgsId();
         			IOUtil.writeString(ctx, ss, mm);
         			ctx.close();
 					
-				}else if (msgStr.startsWith(Constant.insertgsXx)) {//添加公司信息
+				}else if (msgStr.startsWith(Constant.insertgsXx)) {//娣诲姞鍏徃淇℃伅
 					content=msgStr.substring(14);
 					s=StrListChange.StrToArray(content);
 					DBUtil.insertgsXx(s);
 					ctx.close();
 				}
-			else if(msgStr.startsWith(Constant.getCaseTitle)){//得到所有案例名字
+			else if(msgStr.startsWith(Constant.getCaseTitle)){//寰楀埌鎵�鏈夋渚嬪悕瀛�
         			ss=StrListChange.ListToStr(DBUtil.getCaseTtile());
         			IOUtil.writeString(
         					ctx,
@@ -528,7 +528,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.getALLCase)){//获取所有案例的部分信息
+        		}else if(msgStr.startsWith(Constant.getALLCase)){//鑾峰彇鎵�鏈夋渚嬬殑閮ㄥ垎淇℃伅
         			ss=StrListChange.ListToStr(DBUtil.getALLCase());
         			IOUtil.writeString(
         					ctx,
@@ -536,7 +536,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.getSectionCaseXx)){////通过标志位获取案例部分信息
+        		}else if(msgStr.startsWith(Constant.getSectionCaseXx)){////閫氳繃鏍囧織浣嶈幏鍙栨渚嬮儴鍒嗕俊鎭�
         		    content=msgStr.substring(20);
         			ss=StrListChange.ListToStr(DBUtil.getSectionCaseXx(content));
         			IOUtil.writeString(
@@ -545,7 +545,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.getSectionCaseTitleXx)){//通过名称获取部分信息
+        		}else if(msgStr.startsWith(Constant.getSectionCaseTitleXx)){//閫氳繃鍚嶇О鑾峰彇閮ㄥ垎淇℃伅
         		    content=msgStr.substring(25);
         			ss=StrListChange.ListToStr(DBUtil.getSectionCaseTitleXx(content));
         			IOUtil.writeString(
@@ -554,7 +554,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.getSectionCaseTitleXxs)){//通过模糊名称获取部分信息
+        		}else if(msgStr.startsWith(Constant.getSectionCaseTitleXxs)){//閫氳繃妯＄硦鍚嶇О鑾峰彇閮ㄥ垎淇℃伅
         		    content=msgStr.substring(26);
         			ss=StrListChange.ListToStr(DBUtil.getSectionCaseTitleXxs(content));
         			IOUtil.writeString(
@@ -564,7 +564,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					);	
         			ctx.close();
         		}
-        		else if(msgStr.startsWith(Constant.getCaseDetail)){//获取案例详细信息
+        		else if(msgStr.startsWith(Constant.getCaseDetail)){//鑾峰彇妗堜緥璇︾粏淇℃伅
         		    content=msgStr.substring(17);
         			ss=StrListChange.ListToStr(DBUtil.getCaseDetail(content));
         			IOUtil.writeString(
@@ -573,33 +573,33 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
         					mm
         					);	
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.updateCaseFlag)){//更新案例标志位
+        		}else if(msgStr.startsWith(Constant.updateCaseFlag)){//鏇存柊妗堜緥鏍囧織浣�
         			content=msgStr.substring(18);
         			s=StrListChange.StrToArray(content);
         			DBUtil.updateCaseFlag(s);
         			ctx.close();
-        		}else if(msgStr.startsWith(Constant.updateCaseXx)){//更新案例标志位
+        		}else if(msgStr.startsWith(Constant.updateCaseXx)){//鏇存柊妗堜緥鏍囧織浣�
         			content=msgStr.substring(16);
         			s=StrListChange.StrToArray(content);
         			DBUtil.updateCaseXx(s);
         			ctx.close();
-        		}else if (msgStr.startsWith(Constant.getdesignerNameByID)) {//通过ID获取设计师名
+        		}else if (msgStr.startsWith(Constant.getdesignerNameByID)) {//閫氳繃ID鑾峰彇璁捐甯堝悕
 					content=msgStr.substring(23);
 					System.out.println(content);
 					ss=DBUtil.getdesignerNameByID(content);
 					IOUtil.writeString(ctx, ss, mm);	
 					ctx.close();
-        		}else if (msgStr.startsWith(Constant.GetMaxCaseId)) {//获取最大案例的ID
+        		}else if (msgStr.startsWith(Constant.GetMaxCaseId)) {//鑾峰彇鏈�澶ф渚嬬殑ID
         			ss=DBUtil.GetMaxCaseId();
         			IOUtil.writeString(ctx, ss, mm);
         			ctx.close();
 					
-			}else if (msgStr.startsWith(Constant.insertCaseXx)) {//插入案例信息
+			}else if (msgStr.startsWith(Constant.insertCaseXx)) {//鎻掑叆妗堜緥淇℃伅
 					content=msgStr.substring(16);
 					s=StrListChange.StrToArray(content);
 					DBUtil.insertCaseXx(s);
 					ctx.close();
-			}else if(msgStr.startsWith(Constant.getDesignerName)){//得到所有店铺名字
+			}else if(msgStr.startsWith(Constant.getDesignerName)){//寰楀埌鎵�鏈夊簵閾哄悕瀛�
     			ss=StrListChange.ListToStr(DBUtil.getDesignerName());
     			IOUtil.writeString(
     					ctx,
@@ -612,7 +612,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
 				ss=DBUtil.getDesignerIDByName(content);
 				IOUtil.writeString(ctx, ss, mm);	
 				ctx.close();
-    		}else if(msgStr.startsWith(Constant.getALLDesigner)){//获取所有商品的部分信息
+    		}else if(msgStr.startsWith(Constant.getALLDesigner)){//鑾峰彇鎵�鏈夊晢鍝佺殑閮ㄥ垎淇℃伅
     			ss=StrListChange.ListToStr(DBUtil.getALLDesigner());
     			IOUtil.writeString(
     					ctx,
@@ -620,7 +620,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
     					mm
     					);	
     			ctx.close();
-    		}else if(msgStr.startsWith(Constant.getSectionDesignerXxs)){//通过模糊名称获取部分信息
+    		}else if(msgStr.startsWith(Constant.getSectionDesignerXxs)){//閫氳繃妯＄硦鍚嶇О鑾峰彇閮ㄥ垎淇℃伅
     		    content=msgStr.substring(25);
     			ss=StrListChange.ListToStr(DBUtil.getSectionDesignerXxs(content));
     			IOUtil.writeString(
@@ -644,7 +644,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
     					mm
     					);	
     			ctx.close();
-    		}else if(msgStr.startsWith(Constant.updatedesignerXx)){//更新公司标志位
+    		}else if(msgStr.startsWith(Constant.updatedesignerXx)){//鏇存柊鍏徃鏍囧織浣�
     			content=msgStr.substring(20);
     			s=StrListChange.StrToArray(content);
     			DBUtil.updatedesignerXx(s);
@@ -664,19 +664,19 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
 				s=StrListChange.StrToArray(content);
 				DBUtil.insertDesignerXx(s);
 				ctx.close();
-			}else if(msgStr.startsWith(Constant.updateDesignerFlag)){//更新公司标志位
+			}else if(msgStr.startsWith(Constant.updateDesignerFlag)){//鏇存柊鍏徃鏍囧織浣�
     			content=msgStr.substring(22);
     			s=StrListChange.StrToArray(content);
     			DBUtil.updateDesignerFlag(s);
     			ctx.close();
-    		}else if(msgStr.startsWith(Constant.getUserPassword)){//获取用户密码
+    		}else if(msgStr.startsWith(Constant.getUserPassword)){//鑾峰彇鐢ㄦ埛瀵嗙爜
     			content=msgStr.substring(19);
     			ls=DBUtil.getUserpassword(content);
     			ss=StrListChange.ListToStr(ls);
     			
     			IOUtil.writeString(ctx, ss, mm);
     			ctx.close();
-    		}else if(msgStr.startsWith(Constant.insertUser)){//录入新用户
+    		}else if(msgStr.startsWith(Constant.insertUser)){//褰曞叆鏂扮敤鎴�
     			
     			content =msgStr.substring(14);
     			DBUtil.insertUser(content);
@@ -711,7 +711,7 @@ public class JjsqServerHandler extends ChannelInboundHandlerAdapter {
 	@Override
 	public void exceptionCaught(final ChannelHandlerContext ctx ,Throwable cause)
 	{
-		System.out.println("服务器异常已退出");
+		System.out.println("鏈嶅姟鍣ㄥ紓甯稿凡閫�鍑�");
 		cause.printStackTrace();
 		ctx.close();
 	}
